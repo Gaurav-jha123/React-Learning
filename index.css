@@ -1,3 +1,125 @@
 #heading {
     color: red;
 }
+.header{
+    display: flex;
+    justify-content: space-between;
+    border : 1px solid black
+}
+
+.logo{
+    width: 200px;
+}
+
+.nav-items > ul {
+    font-size: 24px;
+    display: flex;
+    padding: 0px 20px;
+    list-style-type: none;
+}
+
+.nav-items > ul > li {
+    padding: 10px;
+    margin : 10px;
+}
+
+.body{
+    padding: 2px;
+}
+
+.Search{
+    padding: 10px;
+}
+.res-logo1{
+    width: 100%;
+}
+/*.res1-rating{
+    background-color:lawngreen;
+    margin-right: 87%;
+}
+.res-card{
+    padding: 5px;
+    width: 200px;
+    height: 300px;
+    border: 1px solid grey;
+}*/
+.res-container{
+    display:ruby;
+}
+.res-card{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    padding: 20px;
+    width: 300px;
+    height: 500px;
+    box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin: 20px;
+
+      /* Add transition for smooth transformation */
+    transition: all 0.3s ease;
+}
+.res-card:hover {
+    /* Slightly change color to give effect that card is lighting up */
+    background-color: #f9fafc;
+
+    /* Lifts the card up */
+    transform: translateY(-10px);
+
+    /* More pronounced shadow to give "lifting" effect */
+    box-shadow: 0px 12px 25px rgba(0, 0, 0, 0.15);
+}
+
+.res-img-container {
+    width: 100%;
+    height: 50%;
+}
+
+.res-logo{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-bottom: 2px solid #f8f9fa;
+}
+
+.res-detail{
+    text-align: center;
+    padding-top: 10px;
+}
+
+.res-name{
+    color: #6c757d;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.res-food{
+    color: #343a40;
+    font-size: 15px;
+    margin-bottom: 10px;
+}
+
+.res-rating-time{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.res-rating{
+    color: green;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.res-delivery-time{
+    color: #343a40;
+    font-size: 13px;
+}
+
+.filter-btn{
+    margin : 10px;
+    cursor: pointer;
+}
