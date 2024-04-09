@@ -1,6 +1,7 @@
 import RestaurantCard from "./RestaurantCard";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import swiggyJSONapi from "../utils/mockData";
+import Shimmer from "./Shimmer"; 
 
 // #filter(resList){
 //     return resList.
@@ -8,12 +9,39 @@ import swiggyJSONapi from "../utils/mockData";
 
 const Body = () => {
     
-    const [listOfRestaurants, setListOfRestraunt] = useState(swiggyJSONapi);
+    const [listOfRestaurants, setListOfRestraunt] = useState([]);
+    const [searchText, setSearchText] = useState("");
 
-    return (
+    useEffect( () => {
+        console.log("UseEffect called after body component loading");
+        fetchData();
+    }, [] );
+    //let json;
+    const fetchData = async () => {
+        const data  = await fetch(
+            "https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.65200&lng=77.16630&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
+        );
+        const json = await data.json();
+        console.log(json);
+        console.log(json?.data?.cards[4]?.card?.card?.gridElements.infoWithStyle.restaurants);
+        setListOfRestraunt(json?.data?.cards[4]?.card?.card?.gridElements.infoWithStyle.restaurants);
+    };
+
+    return listOfRestaurants.length === 0 ? ( <Shimmer/> )  :
+    //console.log("Body componnent will always be rendered first as part of skeleton")
+     (
         <div className="body">
-            <div className="Search">Search</div>
             <div className="filter">
+                <div className="search">
+                    <input type = "text" className="search-box" value = {searchText} onChange={ (e) => {
+                        setSearchText(e.target.value)
+                    }}/>
+                    <button onClick={ () => {
+                        console.log(searchText);
+                    }}>
+                Search
+                </button>
+                </div>
             <button className="filter-btn"
             onClick={() => {
                 const filteredList = listOfRestaurants.filter(
@@ -33,6 +61,7 @@ const Body = () => {
             </div>     
     )
 }
+
     
 const styleCard = {
     backgroundColor: "#f0f0f0"
