@@ -2,6 +2,7 @@ import {LOGO_URL } from "../utils/constants";
 
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import useOnlineStatus from "../utils/useOnlineStatus";
 
 
 // by default useEffect internally needs to be re rendered again and again but 
@@ -11,6 +12,8 @@ import { Link } from "react-router-dom";
 
 const Header = () => {
     const [btnNameReact, setBtnNameReact] = useState("Login");
+
+    const onlineStatus = useOnlineStatus();
     //console.log("Header Rendered Here");
 
     // useEffect(() => {
@@ -23,6 +26,7 @@ const Header = () => {
             </div>
             <div className="nav-items">
             <ul>
+            <li>Online Status: {onlineStatus ? "✅" : "🔴"}</li>
             <li>
                 <Link to="/">Home</Link>
             </li>
@@ -32,6 +36,9 @@ const Header = () => {
             <li>
                 <Link to="/contact">Contact Us</Link>
             </li>
+            <li>
+            <Link to="/grocery">Grocery</Link>
+          </li>
           <li>Cart</li>
                 <button className="login-btn" 
                 onClick={ () => {
