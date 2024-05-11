@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Shimmer from "./Shimmer";
 import { useParams } from "react-router-dom";
-import useRestaurantMenu from "../utils/useRestrauntMenu";
+import useRestaurantMenu from "../utils/useRestaurantMenu";
 
 const RestaurantMenu = () => {
   //const [resInfo, setResInfo] = useState(null);
@@ -26,16 +26,17 @@ const RestaurantMenu = () => {
   if (resInfo === null) return <Shimmer />;
 
   const { name, cuisines, costForTwoMessage } =
-    resInfo?.data?.cards[2]?.card?.card?.info;
+    resInfo?.cards[0]?.card?.card?.info;
 
-  const { itemCards } =
-    json?.data?.cards.find(x=> x.groupedCard)?.
-    groupedCard?.cardGroupMap?.REGULAR?.
-    cards?.map(x => x.card?.card)?.
-    filter(x=> x['@type'] == MENU_ITEM_TYPE_KEY)?.
-    map(x=> x.itemCards).flat().map(x=> x.card?.info) || [];
+    const { itemCards } =
+    resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card;
 
-  console.log(itemCards);
+  // const categories =
+  //   resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter(
+  //     (c) =>
+  //       c.card?.["card"]?.["@type"] ===
+  //       "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+  //   );
 
   return (
     <div className="menu">

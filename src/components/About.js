@@ -1,5 +1,4 @@
 import food from "../Images/burger-image.png";
-import User from "./User";
 import UserClass from "./UserClass";
 import { Component } from "react";
 
