@@ -33,7 +33,7 @@
 .res-logo1{
     width: 100%;
 }
-/*.res1-rating{
+.res1-rating{
     background-color:lawngreen;
     margin-right: 87%;
 }
@@ -42,7 +42,7 @@
     width: 200px;
     height: 300px;
     border: 1px solid grey;
-}*/
+}
 .res-container{
     display:ruby;
 }

@@ -2,7 +2,7 @@ import React, { lazy, Suspense } from "react";
 import Header from './components/Header';
 import Body from "./components/Body";
 import  ReactDOM  from "react-dom/client";
-import About from "./components/About";
+//import About from "./components/About";
 import Contact from "./components/Contact";
 import Error from "./components/Error";
 import RestaurantMenu from "./components/RestaurantMenu";
@@ -50,10 +50,10 @@ const appRouter = createBrowserRouter([
             </Suspense>
           ),
         },
-      //  {
-      //     path: "/restaurants/:resId",
-      //     element: <RestaurantMenu />,
-      //   }, 
+       {
+          path: "/restaurants/:resId",
+          element: <RestaurantMenu />,
+        }, 
       ],
       errorElement: <Error/>,
     },
