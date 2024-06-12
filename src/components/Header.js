@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import useOnlineStatus from "../utils/useOnlineStatus";
 import { useSelector } from "react-redux";
-import twiggitoLogo from "../assets/twiggitoLogo.png";
+import Logo from "../assets/Logo.png";
 
 const Header = () => {
   // const { loggedInUser } = useContext(UserContext);
@@ -17,7 +17,7 @@ const Header = () => {
         <Link to="/home">
           <img
             className="m-5 md:m-10 w-32 md:w-52"
-            src={twiggitoLogo}
+            src={Logo}
             alt="twiggito logo"
           />
         </Link>
