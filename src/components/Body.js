@@ -26,7 +26,8 @@ const Body = () => {
   }, []);
 
   const fetchData = async () => {
-    const data = await fetch(SWIGGY_RESTAURANT_API);
+    const encodedUrl = encodeURIComponent(SWIGGY_RESTAURANT_API);
+    const data = await fetch(`http://localhost:5000/proxy?url=${encodedUrl}`);
 
     const json = await data.json();
     const restaurants =

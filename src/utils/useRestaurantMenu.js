@@ -9,7 +9,8 @@ const useRestaurantMenu = (resId) => {
   }, []);
 
   const fetchData = async () => {
-    const data = await fetch(MENU_API + resId);
+    const encodedUrl = encodeURIComponent(MENU_API + resId);
+    const data = await fetch(`http://localhost:5000/proxy?url=${encodedUrl}`);
     const json = await data.json();
     setResInfo(json.data);
   };

@@ -15,7 +15,8 @@ class UserClass extends React.Component {
     }
 
     async componentDidMount(){
-        const data = await fetch("https://api.github.com/users/Gaurav-jha123");
+        const encodedUrl = encodeURIComponent(`https://api.github.com/users/Gaurav-jha123`);
+        const data = await fetch(`http://localhost:5000/proxy?url=${encodedUrl}`);
         const json = await data.json();
         console.log(json);
         this.setState({
