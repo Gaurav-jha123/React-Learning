@@ -10,7 +10,7 @@ const useRestaurantMenu = (resId) => {
 
   const fetchData = async () => {
     const encodedUrl = encodeURIComponent(MENU_API + resId);
-    const data = await fetch(`http://localhost:5000/proxy?url=${encodedUrl}`);
+    const data = await fetch(`https://corsbypass-gviq.onrender.com/proxy?url=${encodedUrl}`);
     const json = await data.json();
     setResInfo(json.data);
   };

@@ -20,7 +20,7 @@ const Footer = () => {
         />
       </div>
       <div className="bg-black w-full h-28 text-gray-300 text-lg flex justify-center items-center">
-        Made with ❤️ by Noob Coder
+        Made with ❤️ by Gaurav Jha
       </div>
     </div>
   );

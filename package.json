@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "This is Namaste React",
   "scripts": {
-    "start": "parcel index.html --port 3002",
+    "start": "parcel index.html --port 3003",
     "clean": "rimraf .parcel-cache dist",
     "build": "parcel build index.html",
     "proxy": "https://api.example.com",
@@ -32,6 +32,7 @@
     "http-proxy-middleware": "^3.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-icons": "^5.2.1",
     "react-redux": "^8.1.3",
     "react-router-dom": "^6.22.3"
   },

@@ -16,10 +16,21 @@ const Body = () => {
 
   const TopRated = () => {
     const topRatedRestaurants = originalListOfRestaurant.filter(
-      (res) => res.info.avgRating > 4
+      (res) => res.info.avgRating > 4.2
     );
     setListOfRestaurant(topRatedRestaurants);
   };
+
+  const handleClear = () => {
+    setSearchText("");
+  }
+
+  const handleSearch = () => {
+    const filteredRestaurant = originalListOfRestaurant.filter((res) =>
+      res.info.name.toLowerCase().includes(searchText.toLowerCase())
+    );
+    setListOfRestaurant(filteredRestaurant);
+  }
 
   useEffect(() => {
     fetchData();
@@ -27,7 +38,8 @@ const Body = () => {
 
   const fetchData = async () => {
     const encodedUrl = encodeURIComponent(SWIGGY_RESTAURANT_API);
-    const data = await fetch(`http://localhost:5000/proxy?url=${encodedUrl}`);
+    //console.log(encodedUrl);
+    const data = await fetch(`https://corsbypass-gviq.onrender.com/proxy?url=${encodedUrl}`);
 
     const json = await data.json();
     const restaurants =
@@ -56,60 +68,45 @@ const Body = () => {
     <Shimmer />
   ) : (
     <div className="body">
-      <div className="filter">
-        <div className="p-3 ml-4">
+      <div className="filter flex justify-between items-center pt-3 pb-3 pr-4 pl-4">
+        <div className="flex">
+          <button
+            className="bg-red-500 px-4 py-2 mr-4 rounded-lg hover:bg-red-600 text-white"
+            onClick={() => TopRated()}
+          >
+            Top Rated Restaurants
+          </button>
+          <div className="bg-yellow-500 px-4 py-2 text-black rounded-lg">
+            Total Restaurants : {listOfRestaurant.length}
+          </div>
+        </div>
+
+        <div>
           <input
-            className="px-7 py-2 rounded-lg focus:border-b-2 focus:border-gray-200 focus:outline-none"
+            className="px-4 py-2 rounded shadow-md border border-gray-200 focus:border-blue-500 focus:outline-none"
             type="text"
             placeholder="🔍  Search..."
             value={searchText}
             onChange={(e) => setSearchText(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSearch();
-              }
-            }}
+            onKeyDown={(e) => { if (e.key === "Enter") {  handleSearch()}}}
           />
           <button
-            className="bg-red-500 px-5 py-2 m-2 rounded-lg hover:bg-red-600 text-white"
-            onClick={() => {
-              const filteredSearch = originalListOfRestaurant.filter((res) =>
-                res.info.name.toLowerCase().includes(searchText.toLowerCase())
-              );
-              setListOfRestaurant(filteredSearch);
-            }}
+            className="bg-red-500 ml-2 px-4 py-2 rounded-lg hover:bg-red-600 text-white"
+            onClick={() => handleSearch()}
           >
             Search
           </button>
           <button
-            className="bg-red-500 px-5 py-2 m-2 rounded-lg hover:bg-red-600 text-white"
-            onClick={() => {
-              setListOfRestaurant(originalListOfRestaurant);
-              setSearchText("");
-            }}
+            className="bg-red-500 ml-2 px-4 py-2 rounded-lg hover:bg-red-600 text-white"
+            onClick={() => handleClear()
+
+            }
           >
             Clear
           </button>
         </div>
-        <button
-          className="bg-red-500 px-2 py-4 ml-5 rounded-lg hover:bg-red-600 text-white"
-          onClick={() => TopRated()}
-        >
-          Top Rated Restaurants
-        </button>
-        <button className="bg-red-500 px-2 py-4 ml-5 rounded-lg hover:bg-red-600 text-white">
-          Total Restaurants : {listOfRestaurant.length}
-        </button>
       </div>
-      {/* <div className="px-5">
-        <label>User Name</label>
-        <input
-          className="border border-black mt-3"
-          type="text"
-          value={loggedInUser}
-          onChange={(e) => setUserName(e.target.value)}
-        />
-      </div> */}
+      
       <div className="font-bold text-2xl ml-5 mt-5">What's on your mind?</div>
       <div className="flex flex-wrap justify-center items-center">
         {listOfRestaurant.map((resData) => (
@@ -118,7 +115,7 @@ const Body = () => {
             to={"/restaurants/" + resData.info.id}
             className="noDecoration"
           >
-            {resData.info.avgRating > 4.2 ? (
+            {resData.info.avgRating > 4.3 ? (
               <RestaurantBestSeller resData={resData} />
             ) : (
               <RestaurantCard resData={resData} />

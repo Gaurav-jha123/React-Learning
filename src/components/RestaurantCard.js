@@ -11,30 +11,25 @@ const RestaurantCard = (props) => {
     resData?.info;
 
   return (
-    <div className="w-[200px] ml-6 mt-5 bg-gray-100 p-3 rounded-lg h-80 hover:bg-gray-300 m-3">
+    <div className="w-60 h-85 rounded overflow-hidden shadow-md my-6 mx-6 p-4 bg-white transition-shadow duration-300 ease-in-out hover:shadow-lg hover:bg-blue-50">
       <img
-        className="w-full max-h-36"
+        className="h-40 w-full object-cover"
         src={CDN_IMAGE_URL + cloudinaryImageId}
         alt="res-logo"
       />
-      <h2 className="mt-2 text-lg">
-        <strong>{name?.length > 20 ? name?.slice(0, 18) : name}</strong>
-      </h2>
-      <h4>
-        {cuisines?.slice(0, 3).join(", ")}
-        {cuisines && cuisines?.length > 3 && "..."}
-      </h4>
-
-      <h4>
-        {avgRating} ⭐️ {resData?.info.sla?.deliveryTime} mins
-      </h4>
-
-      <h4>{costForTwo}</h4>
+      <div className="px-6 py-4">
+        <div className="font-bold text-lg mb-2 truncate text-center">{name}</div>
+        <p className="text-gray-700 text-base truncate">
+          {cuisines?.slice(0, 3).join(", ") + (cuisines && cuisines?.length > 3 && ", ...")}
+        </p>
+        <p className="mt-1 text-gray-500 text-sm mb-1">
+          {avgRating} ⭐️ <br /> Delivery Time: {resData?.info.sla?.deliveryTime} mins <br />
+          Cost for two: {costForTwo}
+        </p>
+      </div>
     </div>
   );
 };
-
-// Higher order component - takes input as a restaurant card component and returns a enhanced component
 
 export const withBestSellerLabel = (RestaurantCard) => {
   return (props) => {

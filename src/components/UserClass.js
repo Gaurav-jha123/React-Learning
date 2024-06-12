@@ -15,8 +15,8 @@ class UserClass extends React.Component {
     }
 
     async componentDidMount(){
-        const encodedUrl = encodeURIComponent(`https://api.github.com/users/Gaurav-jha123`);
-        const data = await fetch(`http://localhost:5000/proxy?url=${encodedUrl}`);
+        //const encodedUrl = encodeURIComponent(`https://api.github.com/users/Gaurav-jha123`);
+        const data = await fetch(`https://api.github.com/users/Gaurav-jha123`);
         const json = await data.json();
         console.log(json);
         this.setState({
@@ -32,14 +32,14 @@ class UserClass extends React.Component {
         const { login, location } = this.state.userInfo;
         return (
             <div className="user-card">
-                <h1>count : {count}</h1>
+                {/* <h1>count : {count}</h1>
                 <button onClick={() => {
                     this.setState({
                         count : this.state.count + 1,
                     });
-                }}>Count Increase</button>
+                }}>Count Increase</button> */}
                 <h2>Name: {login}</h2>
-                <h3>Location: {location}</h3>
+                <h3>Location: {location || "Delhi"}</h3>
                 <h4>Contact: xyz@email.com</h4>
             </div>
         );
