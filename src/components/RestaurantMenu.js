@@ -1,58 +1,60 @@
-import { useState, useEffect } from "react";
-import Shimmer from "./Shimmer";
+import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import useRestaurantMenu from "../utils/useRestaurantMenu";
+import MenuShimmer from "./Shimmer";
+import RestaurantCategory from "./RestaurantCategory";
 
 const RestaurantMenu = () => {
-  //const [resInfo, setResInfo] = useState(null);
-
   const { resId } = useParams();
 
   const resInfo = useRestaurantMenu(resId);
+  // console.log("Hook data", resInfo);
 
-  // useEffect(() => {
-  //   fetchMenu();
-  // }, []);
+  const [showIndex, setShowIndex] = useState(null);
 
-  // const fetchMenu = async () => {
-  //   const data = await fetch(MENU_API + resId);
-  //   const json = await data.json();
-  //   const restaurantData = json?.data?.cards?.map(x => x.card)?.
-  //                            find(x => x && x.card['@type'] === RESTAURANT_TYPE_KEY)?.card?.info || null;
-  //   setResInfo(restaurantData);
-  //   console.log(restaurantData);
-  // };
+  if (resInfo === null) {
+    return <MenuShimmer />;
+  }
 
-  if (resInfo === null) return <Shimmer />;
-
-  const { name, cuisines, costForTwoMessage } =
+  const { name, cuisines, costForTwoMessage, city, locality, areaName } =
     resInfo?.cards[2]?.card?.card?.info;
 
-    const { itemCards } =
-    resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[2]?.card?.card;
+  // console.log(
+  //   "card",
+  //   resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards
+  // );
 
-  // const categories =
-  //   resInfo?.cards[2]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter(
-  //     (c) =>
-  //       c.card?.["card"]?.["@type"] ===
-  //       "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
-  //   );
+  const categories =
+    resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards.filter(
+      (c) =>
+        c.card?.card?.["@type"] ===
+        "type.googleapis.com/swiggy.presentation.food.v2.ItemCategory"
+    );
 
   return (
-    <div className="menu">
-      <h1>{name}</h1>
-      <p>
-        {cuisines.join(", ")} - {costForTwoMessage}
-      </p>
-      <h2>Menu</h2>
-      <ul>
-        {itemCards.map((item) => (
-          <li key={item.card.info.id}>
-            {item.card.info.name} -{" Rs."}
-            {item.card.info.price / 100 || item.card.info.defaultPrice / 100}
-          </li>
-        ))}
-      </ul>
+    <div className=" flex justify-center flex-col mt-4">
+      <div className="flex justify-center items-center flex-col">
+        <div className="font-bold text-xl">{name}</div>
+
+        <div>
+          {cuisines.join(", ")} - {costForTwoMessage}
+        </div>
+        <div>{(locality || areaName, city)}</div>
+      </div>
+
+      {/* Accordions category */}
+
+      {categories.map((category, index) => {
+        // controlled component
+        return (
+          <RestaurantCategory
+            key={category?.card?.card?.name}
+            data={category?.card?.card}
+            showItems={index === showIndex ? true : false}
+            setShowIndex={() => setShowIndex(showIndex === index ? null : index)}
+          />
+        );
+      })}
     </div>
   );
 };

@@ -1,31 +1,48 @@
-import RestaurantCard from "./RestaurantCard";
-import { useEffect, useState } from "react";
-import Shimmer from "./Shimmer"; 
+import RestaurantCard, { withBestSellerLabel } from "./RestaurantCard";
+import { useEffect, useState, useContext } from "react";
+import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
+import { SWIGGY_RESTAURANT_API } from "../utils/constants";
 import useOnlineStatus from "../utils/useOnlineStatus";
 
+import UserContext from "../utils/UserContext";
+import Footer from "./Footer";
+
 const Body = () => {
-    
-    const [listOfRestaurants, setListOfRestraunt] = useState([]);
-    const [filteredRestaurant, setFilteredRestaurant] = useState([]);
+  // whenever state variable changes, react triggers a reconciliation cycle(re-renders the component)
+  const [originalListOfRestaurant, setOriginalListOfRestaurant] = useState([]);
+  const [listOfRestaurant, setListOfRestaurant] = useState([]);
+  const [searchText, setSearchText] = useState("");
 
-    const [searchText, setSearchText] = useState("");
-    useEffect( () => {
-        console.log("UseEffect called after body component loading");
-        fetchData();
-    }, []);
-    //let json;
-    const fetchData = async () => {
-        const data  = await fetch(
-            "https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.65200&lng=77.16630&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
-        );
-        const json = await data.json();
-        setListOfRestraunt(json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
-        console.log(json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
-        setFilteredRestaurant(json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
-    };
+  const TopRated = () => {
+    const topRatedRestaurants = originalListOfRestaurant.filter(
+      (res) => res.info.avgRating > 4
+    );
+    setListOfRestaurant(topRatedRestaurants);
+  };
 
-    const onlineStatus = useOnlineStatus();
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const fetchData = async () => {
+    const data = await fetch(SWIGGY_RESTAURANT_API);
+
+    const json = await data.json();
+    const restaurants =
+      json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+        ?.restaurants || [];
+
+    setOriginalListOfRestaurant(restaurants);
+    setListOfRestaurant(restaurants);
+    console.log("api response", json);
+  };
+
+  const RestaurantBestSeller = withBestSellerLabel(RestaurantCard);
+
+  const { setUserName } = useContext(UserContext);
+
+  const onlineStatus = useOnlineStatus();
 
   if (onlineStatus === false)
     return (
@@ -34,56 +51,83 @@ const Body = () => {
       </h1>
     );
 
-    return listOfRestaurants.length === 0 ? ( <Shimmer/> )  :
-    //console.log("Body componnent will always be rendered first as part of skeleton")
-     (
-        <div className="body">
-            <div className="filter">
-                <div className="search">
-                    <input type = "text" className="search-box" value = {searchText} 
-                    onChange={ (e) => {
-                        setSearchText(e.target.value)
-                    }}/>
-                    <button onClick={ () => {
-                        //console.log(searchText);
-                        //console.log(listOfRestaurants);
-                        const filteredRestaurant = listOfRestaurants.filter((result) => 
-                            result.info.name.toLowerCase().includes(searchText.toLowerCase())
-                        );
-                        setFilteredRestaurant(filteredRestaurant);
-                        //filteredListofRestaurants = copyListOfRestaurants
-                        // have to implelemt the other half when nothing matches
-                        //console.log(filteredListofRestaurants);
-                    }}>
-                    Search
-                    </button>
-                </div>
-            <button className="filter-btn"
+  return listOfRestaurant.length === 0 ? (
+    <Shimmer />
+  ) : (
+    <div className="body">
+      <div className="filter">
+        <div className="p-3 ml-4">
+          <input
+            className="px-7 py-2 rounded-lg focus:border-b-2 focus:border-gray-200 focus:outline-none"
+            type="text"
+            placeholder="🔍  Search..."
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                handleSearch();
+              }
+            }}
+          />
+          <button
+            className="bg-red-500 px-5 py-2 m-2 rounded-lg hover:bg-red-600 text-white"
             onClick={() => {
-                const filteredList = filteredRestaurant.filter(
-                    (res) => res.info.avgRating > 4
-                );
-                setFilteredRestaurant(filteredList);
-            }}>
-                Top Rated Restaurants</button>
-            </div>
-            <div className="res-container">
-            {
-            filteredRestaurant.map((restaurant) => (
-                <RestaurantCard key = {restaurant.info.id} resObj = {restaurant}/>
-            ))
-            }
-            </div>
-            </div>     
-    )
-}
-
-    
-const styleCard = {
-    backgroundColor: "#f0f0f0"
-}
-
+              const filteredSearch = originalListOfRestaurant.filter((res) =>
+                res.info.name.toLowerCase().includes(searchText.toLowerCase())
+              );
+              setListOfRestaurant(filteredSearch);
+            }}
+          >
+            Search
+          </button>
+          <button
+            className="bg-red-500 px-5 py-2 m-2 rounded-lg hover:bg-red-600 text-white"
+            onClick={() => {
+              setListOfRestaurant(originalListOfRestaurant);
+              setSearchText("");
+            }}
+          >
+            Clear
+          </button>
+        </div>
+        <button
+          className="bg-red-500 px-2 py-4 ml-5 rounded-lg hover:bg-red-600 text-white"
+          onClick={() => TopRated()}
+        >
+          Top Rated Restaurants
+        </button>
+        <button className="bg-red-500 px-2 py-4 ml-5 rounded-lg hover:bg-red-600 text-white">
+          Total Restaurants : {listOfRestaurant.length}
+        </button>
+      </div>
+      {/* <div className="px-5">
+        <label>User Name</label>
+        <input
+          className="border border-black mt-3"
+          type="text"
+          value={loggedInUser}
+          onChange={(e) => setUserName(e.target.value)}
+        />
+      </div> */}
+      <div className="font-bold text-2xl ml-5 mt-5">What's on your mind?</div>
+      <div className="flex flex-wrap justify-center items-center">
+        {listOfRestaurant.map((resData) => (
+          <Link
+            key={resData.info.id}
+            to={"/restaurants/" + resData.info.id}
+            className="noDecoration"
+          >
+            {resData.info.avgRating > 4.2 ? (
+              <RestaurantBestSeller resData={resData} />
+            ) : (
+              <RestaurantCard resData={resData} />
+            )}
+          </Link>
+        ))}
+      </div>
+      <Footer />
+    </div>
+  );
+};
 
 export default Body;
-
-//module.export = {Body};
